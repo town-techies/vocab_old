@@ -1,0 +1,16 @@
+<link href="/assets/reset.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="/assets/structure.css" media="screen" rel="stylesheet" type="text/css" />
+<%= form_for(resource, :as => resource_name, :url => session_path(resource_name),:html => {:class=>"box login"}) do |f| %>
+	<fieldset class="boxBody">
+	  <label><%= f.label :email %></label>
+	  <input type="text" id="admin_email" name="admin[email]" tabindex="1" placeholder="Email" required>
+	  <label><%=link_to "Forget your password?","/admins/password/new",:class=>"rLink",:tabindex=>"5"%><%= f.label :password %></label>
+	  <%= f.password_field :password,:tabindex=>"2" %>
+	</fieldset>
+	<footer>
+	  <label><input type="checkbox" tabindex="3">Keep me logged in</label>
+	  <%= f.submit "Login",:class=>"btnLogin",:tabindex=>"4" %>
+	</footer>
+  <%=link_to "Sign Up For New Account","/admins/sign_up"%>
+<% end %>
+

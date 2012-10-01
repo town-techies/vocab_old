@@ -1,0 +1,48 @@
+= @object.class == UserDetail.new.class
+-if @object.class == UserDetail.new.class
+  - @model_config.show.with(:object => @object, :view => self).visible_groups.each do |fieldset|
+    - unless (fields = fieldset.with(:object => @object, :view => self).visible_fields).empty?
+      - if !(values = fields.map{ |f| v = f.value; (!v.nil? && v != '' && v != []) ? v : nil }).compact.empty? || !RailsAdmin::config.compact_show_view
+        .fieldset
+          %h4
+            = fieldset.label
+          - if fieldset.help
+            %p= fieldset.help
+          %dl
+            - fields.each_with_index do |field, index|
+              - if !values[index].nil? || !RailsAdmin::config.compact_show_view
+                - if field.label == "User answer"
+                  %dt.label{:class => "#{field.type_css_class} #{field.css_class}"}= "Questions with Answers"
+                  %dd
+                    - @user_answers = JSON.parse(@object.user_answer)
+                    - @user_answers.each do |question_id,answer_id|
+                      = Question
+                      - question = Question.find(question_id)
+                      - answer = Answer.find(answer_id)
+                      %pre.prettyprint= question.content
+                      = Answer 
+                      %pre.prettyprint= answer.content
+                - else
+                  - if field.label == "Mbti score"
+                    %dt.label{:class => "#{field.type_css_class} #{field.css_class}"}= field.label
+                    %dd
+                      %pre.prettyprint= field.pretty_value
+                  - if field.label == "User"
+                    %dt.label{:class => "#{field.type_css_class} #{field.css_class}"}= field.label
+                    %dd
+                      %pre.prettyprint= field.pretty_value
+-else
+  - @model_config.show.with(:object => @object, :view => self).visible_groups.each do |fieldset|
+    - unless (fields = fieldset.with(:object => @object, :view => self).visible_fields).empty?
+      - if !(values = fields.map{ |f| v = f.value; (!v.nil? && v != '' && v != []) ? v : nil }).compact.empty? || !RailsAdmin::config.compact_show_view
+        .fieldset
+          %h4
+            = fieldset.label
+          - if fieldset.help
+            %p= fieldset.help
+          %dl
+            - fields.each_with_index do |field, index|
+              - if !values[index].nil? || !RailsAdmin::config.compact_show_view
+                %dt.label{:class => "#{field.type_css_class} #{field.css_class}"}= field.label
+                %dd
+                  %pre.prettyprint= field.pretty_value                   
