@@ -20,8 +20,8 @@ end
 
 gem 'paperclip'
 
-gem 'capistrano'
-gem 'railsless-deploy'
+#gem 'capistrano'
+#gem 'railsless-deploy'
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
