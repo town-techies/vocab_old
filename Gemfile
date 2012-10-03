@@ -20,7 +20,8 @@ end
 
 gem 'paperclip'
 
-
+gem 'capistrano'
+gem 'railsless-deploy'
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
@@ -44,4 +45,4 @@ gem "jquery-rails"
 gem "settingslogic"
 gem 'fastercsv'
 gem 'execjs'
-gem 'therubyracer', :platforms => :ruby
+#gem 'therubyracer', :platforms => :ruby
