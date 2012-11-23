@@ -1,31 +1,46 @@
-require 'rubygems'
-require 'railsless-deploy'
-load 'config/deploy.rb' if respond_to?(:namespace)
+require 'bundler/capistrano'
 
+role :web, "node1283.speedyrails.net"
+role :app, "node1283.speedyrails.net"
+role :db,  "node1283.speedyrails.net", :primary => true
+set :application, "vocabtales"
 
+set :repository, "git@github.com:town-techies/vocab.git"
 
-set :application, "set your application name here"
-set :repository,  "set your repository location here"
+set(:deploy_to) { "/var/www/apps/#{application}" }
 
-set :scm, :subversion
-# Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
+set :user, "deploy"
+set :password, "47NjQHT9Cp"
+set :group, "www-data"
 
-role :web, "your web-server here"                          # Your HTTP server, Apache/etc
-role :app, "your app-server here"                          # This may be the same as your `Web` server
-role :db,  "your primary db-server here", :primary => true # This is where Rails migrations will run
-role :db,  "your slave db-server here"
+set :deploy_via, :remote_cache
+set :scm, "git"
+set :keep_releases, 5
 
-# if you want to clean up old releases on each deploy uncomment this:
-# after "deploy:restart", "deploy:cleanup"
+after "deploy", "deploy:cleanup"
+after "deploy:migrations", "deploy:cleanup"
+after "deploy:update_code", "deploy:symlink_configs" #, "deploy:symlink_custom"
 
-# if you're still using the script/reaper helper you will need
-# these http://github.com/rails/irs_process_scripts
+namespace :deploy do
 
-# If you are using Passenger mod_rails uncomment this:
-# namespace :deploy do
-#   task :start do ; end
-#   task :stop do ; end
-#   task :restart, :roles => :app, :except => { :no_release => true } do
-#     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
-#   end
-# end
+  desc "Restart Application"
+  task :restart, :roles => :app do
+    run "touch #{deploy_to}/#{shared_dir}/tmp/restart.txt"
+  end
+
+  desc "Tasks to execute after code update"
+  task :symlink_configs, :roles => [:app] do
+    run "ln -nfs #{deploy_to}/#{shared_dir}/config/database.yml #{release_path}/config/database.yml"
+    run "if [ -d #{release_path}/tmp ]; then rm -rf #{release_path}/tmp; fi; ln -nfs #{deploy_to}/#{shared_dir}/tmp #{release_path}/tmp"
+  end
+
+  desc "Custom Symlinks"
+  task :symlink_custom, :roles => [:app] do
+  end
+  
+  desc "Install bundles into application"
+  task :install, :roles => [:app] do
+    run "cd #{current_path} && LC_ALL='en_US.UTF-8' bundle install --deployment --without test"
+  end
+
+end
