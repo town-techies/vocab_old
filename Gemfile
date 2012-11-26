@@ -43,6 +43,3 @@ gem "haml", ">= 3.0.0"
 gem "haml-rails"
 gem "jquery-rails"
 gem "settingslogic"
-gem 'fastercsv'
-gem 'execjs'
-gem 'therubyracer', :platforms => :ruby
